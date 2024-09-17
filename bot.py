@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -12,10 +13,18 @@ from src.handlers.notes import notes_router
 from redis_session import RedisSession
 from config import Config
 
+from logging_config import setup_logging  # Импортируем нашу функцию для логирования
+
+async def log_incoming_update(bot: Bot, update):
+    logger = logging.getLogger("aiogram")
+    logger.info(f"Incoming update: {update}")
+
 class NoteCallbackData(CallbackData, prefix="action"):
     action_type: str
 
 async def main():
+    setup_logging()
+
     bot = Bot(token=Config.BOT_TOKEN)
     dp = Dispatcher(storage=MemoryStorage())
 
