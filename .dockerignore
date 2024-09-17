@@ -1,0 +1,11 @@
+# Исключаем ненужные файлы и директории
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.git
+.gitignore
+.vscode/
+*.log
+.venv
