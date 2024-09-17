@@ -13,7 +13,7 @@ from src.handlers.notes import notes_router
 from redis_session import RedisSession
 from config import Config
 
-from logging_config import setup_logging  # Импортируем нашу функцию для логирования
+from logging_config import setup_logging
 
 async def log_incoming_update(bot: Bot, update):
     logger = logging.getLogger("aiogram")
