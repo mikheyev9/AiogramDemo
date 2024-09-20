@@ -10,3 +10,4 @@ class Config:
     REDIS_HOST = os.getenv("REDIS_HOST")
     REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+    LOG_PATH = os.getenv("LOG_PATH")

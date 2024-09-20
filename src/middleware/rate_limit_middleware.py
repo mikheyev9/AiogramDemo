@@ -3,10 +3,9 @@ import time
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
 
-from redis_session import RedisSession
 
 class RateLimitMiddleware(BaseMiddleware):
-    def __init__(self, limit: int, interval: int, session: RedisSession, key_prefix: str = "ratelimit_"):
+    def __init__(self, limit: int, interval: int, session, key_prefix: str = "ratelimit_"):
         self.limit = limit  # Максимальное количество запросов
         self.interval = interval  # Интервал в секундах
         self.redis_session = session

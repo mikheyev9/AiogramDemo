@@ -1,7 +1,6 @@
 import asyncio
 
 from aiogram import Bot, Dispatcher
-from aiogram.fsm.storage.memory import MemoryStorage
 
 from src.middleware.session_middleware import UnifiedSessionMiddleware
 from src.middleware.rate_limit_middleware import RateLimitMiddleware
@@ -15,7 +14,7 @@ from src.middleware import LoggingMiddleware
 
 
 async def main():
-    logger_singleton = AsyncLoggerSingleton()
+    logger_singleton = AsyncLoggerSingleton(log_file_path=Config.LOG_PATH)
     logger = await logger_singleton.get_logger()
 
 
@@ -29,8 +28,10 @@ async def main():
     dp = Dispatcher(storage=session)
 
     dp.update.middleware(LoggingMiddleware(logger))
-    dp.update.middleware(RateLimitMiddleware(limit=50, interval=60, session=session_manager))
-    dp.update.middleware(UnifiedSessionMiddleware(session=session_manager, base_url=Config.BASE_URL))
+    dp.update.middleware(RateLimitMiddleware(limit=50, interval=60,
+                                             session=session_manager))
+    dp.update.middleware(UnifiedSessionMiddleware(session=session_manager,
+                                                  base_url=Config.BASE_URL))
 
 
     dp.include_router(start_router)
