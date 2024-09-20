@@ -87,7 +87,6 @@ venv/
 *.mysql
 
 # Logs
-logs/
 *.log
 *.out
 *.err
