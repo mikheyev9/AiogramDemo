@@ -1,36 +1,37 @@
 import asyncio
-import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.filters.callback_data import CallbackData
 
 from src.middleware.session_middleware import UnifiedSessionMiddleware
 from src.middleware.rate_limit_middleware import RateLimitMiddleware
 from src.handlers.start import start_router
 from src.handlers.register import login_router
 from src.handlers.notes import notes_router
-from redis_session import RedisSession
+from src.database import storageSession
 from config import Config
+from logs import AsyncLoggerSingleton
+from src.middleware import LoggingMiddleware
 
-from logging_config import setup_logging
-
-async def log_incoming_update(bot: Bot, update):
-    logger = logging.getLogger("aiogram")
-    logger.info(f"Incoming update: {update}")
-
-class NoteCallbackData(CallbackData, prefix="action"):
-    action_type: str
 
 async def main():
-    setup_logging()
+    logger_singleton = AsyncLoggerSingleton()
+    logger = await logger_singleton.get_logger()
+
+
+    session_manager = storageSession(redis_host=Config.REDIS_HOST,
+                                     redis_port=Config.REDIS_PORT,
+                                     logger=logger)
+
+    session = await session_manager.get_storage_session()
 
     bot = Bot(token=Config.BOT_TOKEN)
-    dp = Dispatcher(storage=MemoryStorage())
+    dp = Dispatcher(storage=session)
 
-    redis_session = RedisSession(redis_host=Config.REDIS_HOST, redis_port=Config.REDIS_PORT)
-    dp.update.middleware(RateLimitMiddleware(limit=50, interval=60, redis_session=redis_session))
-    dp.update.middleware(UnifiedSessionMiddleware(redis_session=redis_session, base_url=Config.BASE_URL))
+    dp.update.middleware(LoggingMiddleware(logger))
+    dp.update.middleware(RateLimitMiddleware(limit=50, interval=60, session=session_manager))
+    dp.update.middleware(UnifiedSessionMiddleware(session=session_manager, base_url=Config.BASE_URL))
+
 
     dp.include_router(start_router)
     dp.include_router(login_router)

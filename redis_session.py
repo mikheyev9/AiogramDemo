@@ -1,6 +1,7 @@
-import redis.asyncio as aioredis
 import asyncio
 import json
+
+import redis.asyncio as aioredis
 
 
 class RedisSession:
@@ -22,7 +23,6 @@ class RedisSession:
         else:
             session = {}
             await self.redis.set(f'session:{user_id}', json.dumps(session))
-        print(session)
         return session
 
     async def set_session(self, user_id, session_data):
@@ -38,3 +38,6 @@ class RedisSession:
 
     async def clear_token(self, user_id):
         await self.redis.delete(f'token:{user_id}')
+
+
+

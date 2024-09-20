@@ -11,6 +11,7 @@ python = "^3.11"
 aiogram = "^3.13.0"
 redis = "^5.0.8"
 load-dotenv = "^0.1.0"
+aiologger = "^0.7.0"
 
 
 [build-system]

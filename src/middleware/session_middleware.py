@@ -1,12 +1,11 @@
 import aiohttp
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
-from redis_session import RedisSession
 from ..services.api_service import ApiClient
 
 class UnifiedSessionMiddleware(BaseMiddleware):
-    def __init__(self, redis_session: RedisSession, base_url: str, session_timeout: int = 120):
-        self.redis_session = redis_session
+    def __init__(self, session, base_url: str, session_timeout: int = 120):
+        self.redis_session = session
         self.base_url = base_url
         self.session_timeout = session_timeout
         self.aiohttp_sessions = {}

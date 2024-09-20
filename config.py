@@ -8,4 +8,5 @@ class Config:
     BOT_TOKEN = os.getenv("BOT_TOKEN")
     BASE_URL = os.getenv("BASE_URL")
     REDIS_HOST = os.getenv("REDIS_HOST")
-    REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))  # По умолчанию 6379 если не указано
+    REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+    LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
